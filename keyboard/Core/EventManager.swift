@@ -7,7 +7,6 @@ final class EventManager {
 
     private let workspace = NSWorkspace.shared()
     private let seq = KeySequence()
-    private let superKey = SuperKey(key: .s)
     private let noremapFlag: CGEventFlags = .maskAlphaShift
 
     enum Action {
@@ -51,9 +50,7 @@ final class EventManager {
 
 //        NSLog("\(String(describing: key)) \(isKeyDown ? "down" : "up")")
 
-        let action = updateSuperKeyState(key: key, flags: flags, isKeyDown: isKeyDown, isARepeat: event.isARepeat)
-            ?? handleSuperKey(key: key, flags: flags, isKeyDown: isKeyDown)
-            ?? handleSafeQuit(key: key, flags: flags, isKeyDown: isKeyDown)
+        let action = handleSafeQuit(key: key, flags: flags, isKeyDown: isKeyDown)
             ?? handleEmacsMode(key: key, flags: flags, isKeyDown: isKeyDown)
             ?? handleEscape(key: key, flags: flags, isKeyDown: isKeyDown)
             ?? handleWindowResizer(key: key, flags: flags, isKeyDown: isKeyDown)
@@ -65,97 +62,6 @@ final class EventManager {
         case .passThrough:
             return Unmanaged.passRetained(cgEvent)
         }
-    }
-
-    private func updateSuperKeyState(key: KeyCode, flags: NSEventModifierFlags, isKeyDown: Bool, isARepeat: Bool) -> Action? {
-        guard flags.match() else {
-            superKey.state = .inactive
-            return nil
-        }
-
-        if key == superKey.prefixKey {
-            guard !isARepeat else {
-                return .prevent
-            }
-            guard !isKeyDown else {
-                superKey.state = .activated
-                return .prevent
-            }
-
-            switch superKey.state {
-            case .activated:
-                press(key: superKey.prefixKey)
-            case .used, .enabled:
-                if let key = superKey.cancel() {
-                    press(key: superKey.prefixKey)
-                    press(key: key)
-                } else {
-                    press(key: .command)
-                }
-            default: break
-            }
-
-            superKey.state = .inactive
-            return .prevent
-        }
-
-        guard isKeyDown else {
-            return nil
-        }
-
-        guard superKey.enable() else {
-            superKey.state = .disabled
-
-            press(key: superKey.prefixKey)
-            press(key: key, action: (isKeyDown ? .down : .up))
-
-            return .prevent
-        }
-
-        return nil
-    }
-
-    // Window/Space navigations:
-    //
-    //     S+H   Move to left space
-    //     S+L   Move to right space
-    //     S+J   Switch to next application
-    //     S+K   Switch to previous application
-    //     S+N   Switch to next window
-    //     S+B   Switch to previous window
-    //
-    private func handleSuperKey(key: KeyCode, flags: NSEventModifierFlags, isKeyDown: Bool) -> Action? {
-        guard superKey.isEnabled else {
-            return nil
-        }
-        guard flags.match() else {
-            return nil
-        }
-
-        superKey.perform(key: key) { [weak self] in
-            guard isKeyDown else {
-                return
-            }
-
-            switch key {
-            case .h:
-                self?.press(key: .leftArrow, flags: [.maskControl, .maskSecondaryFn])
-            case .j:
-                self?.press(key: .tab, flags: [.maskCommand])
-            case .k:
-                self?.press(key: .tab, flags: [.maskCommand, .maskShift])
-            case .l:
-                self?.press(key: .rightArrow, flags: [.maskControl, .maskSecondaryFn])
-            case .n:
-                self?.press(key: .backtick, flags: [.maskCommand])
-            case .b:
-                self?.press(key: .backtick, flags: [.maskCommand, .maskShift])
-            default:
-                break
-            }
-        }
-
-        return .prevent
     }
 
     // Press Cmd-Q twice to "Quit Application"
