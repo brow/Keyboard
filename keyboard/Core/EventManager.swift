@@ -11,6 +11,7 @@ final class EventManager {
     case prevent
     case passThrough
   }
+  
   enum KeyPressAction {
     case down
     case up
@@ -72,7 +73,12 @@ final class EventManager {
   //     Ctrl-A    Beginning of line (Shift allowed)
   //     Ctrl-E    End of line (Shift allowed)
   //
-  private func handleEmacsMode(key: KeyCode, flags: NSEventModifierFlags, isKeyDown: Bool) -> Action? {
+  private func handleEmacsMode(
+    key: KeyCode,
+    flags: NSEventModifierFlags,
+    isKeyDown: Bool)
+    -> Action?
+  {
     if key == .c && flags.match(control: true) {
       press(key: .escape, action: (isKeyDown ? .down : .up))
       return .prevent
@@ -126,8 +132,8 @@ final class EventManager {
   private func press(
     key: KeyCode,
     flags: CGEventFlags = [],
-    action: KeyPressAction = .both
-    ) {
+    action: KeyPressAction = .both)
+  {
     action.keyDowns().forEach {
       if !$0 && action == .both {
         usleep(1000)
