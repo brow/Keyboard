@@ -115,14 +115,4 @@ enum KeyCode: UInt16 {
     case rightArrow    = 0x7c
     case downArrow     = 0x7d
     case upArrow       = 0x7e
-
-    // ISO keyboard
-    case isoSection =  0x0a
-
-    // JIS keyboard
-    case jisYen =          0x5d
-//    case jisXXX =          0x5e
-    case jisKeypadComma =  0x5f
-    case jisEisu =         0x66
-    case jisKana =         0x68
 }
