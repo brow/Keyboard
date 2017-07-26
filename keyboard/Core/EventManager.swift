@@ -40,24 +40,10 @@ final class EventManager {
     isKeyDown: Bool)
     -> Bool
   {
-    var remap: (KeyCode, CGEventFlags)? = nil
-    
-    if flags.match(control: true) {
-      switch key {
-      case .leftBracket:
-        remap = (.escape, [])
-      default:
-        break
-      }
-    }
-    
-    if let (remapKeyCode, remapFlags) = remap {
-      let remapFlags = flags.contains(.maskShift)
-        ? remapFlags.union(.maskShift)
-        : remapFlags
+    if flags.contains(.maskControl), key == .leftBracket {
       press(
-        key: remapKeyCode,
-        flags: remapFlags,
+        key: .escape,
+        flags: flags.subtracting(.maskControl),
         isKeyDown: isKeyDown)
       return true
     }
