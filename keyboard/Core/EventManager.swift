@@ -12,20 +12,6 @@ final class EventManager {
     case passThrough
   }
   
-  enum KeyPressAction {
-    case down
-    case up
-    
-    func keyDowns() -> [Bool] {
-      switch self {
-      case .down:
-        return [true]
-      case .up:
-        return [false]
-      }
-    }
-  }
-  
   private init() {
   }
   
@@ -77,7 +63,7 @@ final class EventManager {
     -> Action?
   {
     if key == .c && flags.match(control: true) {
-      press(key: .escape, action: (isKeyDown ? .down : .up))
+      press(key: .escape, isKeyDown: isKeyDown)
       return .prevent
     }
     
@@ -95,6 +81,7 @@ final class EventManager {
         break
       }
     }
+    
     if flags.match(shift: nil, control: true) {
       switch key {
       case .p:
@@ -121,7 +108,7 @@ final class EventManager {
       press(
         key: remapKeyCode,
         flags: remapFlags,
-        action: (isKeyDown ? .down : .up))
+        isKeyDown: isKeyDown )
       return .prevent
     }
     
@@ -131,17 +118,15 @@ final class EventManager {
   private func press(
     key: KeyCode,
     flags: CGEventFlags = [],
-    action: KeyPressAction)
+    isKeyDown: Bool)
   {
-    action.keyDowns().forEach { keyDown in
-      if let e = CGEvent(
-          keyboardEventSource: nil,
-          virtualKey: key.rawValue,
-          keyDown: keyDown)
-      {
-        e.flags = flags.union(noremapFlag)
-        e.post(tap: .cghidEventTap)
-      }
+    if let e = CGEvent(
+      keyboardEventSource: nil,
+      virtualKey: key.rawValue,
+      keyDown: isKeyDown)
+    {
+      e.flags = flags.union(noremapFlag)
+      e.post(tap: .cghidEventTap)
     }
   }
 }
