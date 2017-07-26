@@ -134,18 +134,18 @@ final class EventManager {
     flags: CGEventFlags = [],
     action: KeyPressAction = .both)
   {
-    action.keyDowns().forEach {
-      if !$0 && action == .both {
+    action.keyDowns().forEach { keyDown in
+      if !keyDown && action == .both {
         usleep(1000)
       }
-      
-      let e = CGEvent(
-        keyboardEventSource: nil,
-        virtualKey: key.rawValue,
-        keyDown: $0
-      )
-      e?.flags = flags.union(noremapFlag)
-      e?.post(tap: .cghidEventTap)
+      if let e = CGEvent(
+          keyboardEventSource: nil,
+          virtualKey: key.rawValue,
+          keyDown: keyDown)
+      {
+        e.flags = flags.union(noremapFlag)
+        e.post(tap: .cghidEventTap)
+      }
     }
   }
 }
