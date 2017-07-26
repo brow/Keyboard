@@ -15,12 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private let statusItem: NSStatusItem = {
     let statusItem = NSStatusBar.system().statusItem(
       withLength: NSSquareStatusItemLength)
-    
-    if let button = statusItem.button {
-      button.title = "K"
-      button.action = #selector(open)
-    }
-    
+    statusItem.button?.title = "⌨️"
     statusItem.menu = {
       let menu = NSMenu()
       menu.addItem(
@@ -30,7 +25,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           keyEquivalent: "q"))
       return menu
     }()
-    
     return statusItem
   }()
 
@@ -69,6 +63,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @objc private func quit() {
     NSApplication.shared().terminate(nil)
   }
-  
-  @objc private func open() {}
 }
