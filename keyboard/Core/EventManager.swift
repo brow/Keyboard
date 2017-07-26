@@ -48,6 +48,29 @@ final class EventManager {
       return true
     }
     
+    if flags.contains(.maskSecondaryFn) {
+      if let arrowKey: KeyCode = ({
+        switch key {
+        case .h:
+          return .leftArrow
+        case .j:
+          return .downArrow
+        case .k:
+          return .upArrow
+        case .l:
+          return .rightArrow
+        default:
+          return nil
+        }
+      }()) {
+        press(
+          key: arrowKey,
+          flags: flags.subtracting(.maskSecondaryFn),
+          isKeyDown: isKeyDown)
+        return true
+      }
+    }
+    
     return false
   }
   
