@@ -34,19 +34,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private func trapKeyEvents() {
     let eventMask = (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
     
-    guard let eventTap = CGEvent.tapCreate(
-      tap: .cghidEventTap,
-      place: .headInsertEventTap,
-      options: .defaultTap,
-      eventsOfInterest: CGEventMask(eventMask),
-      callback: { (_, _, event, _) -> Unmanaged<CGEvent>? in
-        return EventManager.shared.handle(event: event)
-    },
-      userInfo: nil
-      ) else {
-        print("Failed to create event tap")
-        exit(1)
-    }
+    guard
+      let eventTap = CGEvent.tapCreate(
+        tap: .cghidEventTap,
+        place: .headInsertEventTap,
+        options: .defaultTap,
+        eventsOfInterest: CGEventMask(eventMask),
+        callback: { (_, _, event, _) in handle(event: event) },
+        userInfo: nil)
+      else { fatalError("Failed to create event tap") }
     
     let runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0)
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
