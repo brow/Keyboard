@@ -31,7 +31,7 @@ final class EventManager {
     
     print(flags, String(describing: key), isKeyDown ? "down" : "up")
     
-    let action = handleEmacsMode(
+    let action = handleKeyEvent(
       key: key,
       flags: flags,
       isKeyDown: isKeyDown)
@@ -45,7 +45,7 @@ final class EventManager {
     }
   }
   
-  private func handleEmacsMode(
+  private func handleKeyEvent(
     key: KeyCode,
     flags: CGEventFlags,
     isKeyDown: Bool)
