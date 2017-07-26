@@ -16,10 +16,11 @@ final class EventManager {
   }
   
   func handle(cgEvent: CGEvent) -> Unmanaged<CGEvent>? {
-    guard !cgEvent.flags.contains(noremapFlag) else {
+    if cgEvent.flags.contains(noremapFlag) {
       cgEvent.flags.remove(noremapFlag)
       return Unmanaged.passRetained(cgEvent)
     }
+    
     guard let event = NSEvent(cgEvent: cgEvent) else {
       return Unmanaged.passRetained(cgEvent)
     }
