@@ -39,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         options: .defaultTap,
         eventsOfInterest: CGEventMask(eventMask),
         callback: { (_, _, event, _) in
-          handle(event: event) ? nil : Unmanaged.passRetained(event)
+          handle(event: event) ? nil : Unmanaged.passUnretained(event)
         },
         userInfo: nil)
       else { fatalError("Failed to create event tap") }
