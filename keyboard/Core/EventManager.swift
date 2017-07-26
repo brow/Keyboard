@@ -15,38 +15,39 @@ final class EventManager {
   private init() {
   }
   
-  func handle(cgEvent: CGEvent) -> Unmanaged<CGEvent>? {
-    if cgEvent.flags.contains(noremapFlag) {
-      cgEvent.flags.remove(noremapFlag)
-      return Unmanaged.passRetained(cgEvent)
+  func handle(event: CGEvent) -> Unmanaged<CGEvent>? {
+    if event.flags.contains(noremapFlag) {
+      event.flags.remove(noremapFlag)
+      return Unmanaged.passRetained(event)
     }
     
-    guard let event = NSEvent(cgEvent: cgEvent) else {
-      return Unmanaged.passRetained(cgEvent)
-    }
-    guard let key = KeyCode(rawValue: event.keyCode) else {
-      return Unmanaged.passRetained(cgEvent)
-    }
+    guard
+      let keyCode = NSEvent(cgEvent: event)?.keyCode,
+      let key = KeyCode(rawValue: keyCode)
+      else { return Unmanaged.passRetained(event) }
     
-    let flags = event.modifierFlags
+    let flags = event.flags
     let isKeyDown = (event.type == .keyDown)
     
-    print(cgEvent.flags, String(describing: key), isKeyDown ? "down" : "up")
+    print(flags, String(describing: key), isKeyDown ? "down" : "up")
     
-    let action = handleEmacsMode(key: key, flags: flags, isKeyDown: isKeyDown)
+    let action = handleEmacsMode(
+      key: key,
+      flags: flags,
+      isKeyDown: isKeyDown)
       ?? .passThrough
     
     switch action {
     case .prevent:
       return nil
     case .passThrough:
-      return Unmanaged.passRetained(cgEvent)
+      return Unmanaged.passRetained(event)
     }
   }
   
   private func handleEmacsMode(
     key: KeyCode,
-    flags: NSEventModifierFlags,
+    flags: CGEventFlags,
     isKeyDown: Bool)
     -> Action?
   {
@@ -62,7 +63,7 @@ final class EventManager {
     }
     
     if let (remapKeyCode, remapFlags) = remap {
-      let remapFlags = flags.contains(.shift)
+      let remapFlags = flags.contains(.maskShift)
         ? remapFlags.union(.maskShift)
         : remapFlags
       press(

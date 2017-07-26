@@ -1,6 +1,6 @@
 import Cocoa
 
-extension NSEventModifierFlags {
+extension CGEventFlags {
   func match(
     shift: Bool? = false,
     control: Bool? = false,
@@ -8,16 +8,16 @@ extension NSEventModifierFlags {
     command: Bool? = false)
     -> Bool
   {
-    if let shift = shift, contains(.shift) != shift {
+    if let shift = shift, contains(.maskShift) != shift {
       return false
     }
-    if let control = control, contains(.control) != control {
+    if let control = control, contains(.maskControl) != control {
       return false
     }
-    if let option = option, contains(.option) != option {
+    if let option = option, contains(.maskAlternate) != option {
       return false
     }
-    if let command = command, contains(.command) != command {
+    if let command = command, contains(.maskCommand) != command {
       return false
     }
     return true

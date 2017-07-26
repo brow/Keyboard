@@ -40,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       options: .defaultTap,
       eventsOfInterest: CGEventMask(eventMask),
       callback: { (_, _, event, _) -> Unmanaged<CGEvent>? in
-        return EventManager.shared.handle(cgEvent: event)
+        return EventManager.shared.handle(event: event)
     },
       userInfo: nil
       ) else {
