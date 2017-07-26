@@ -30,7 +30,7 @@ final class EventManager {
     let flags = event.modifierFlags
     let isKeyDown = (event.type == .keyDown)
     
-    //        NSLog("\(String(describing: key)) \(isKeyDown ? "down" : "up")")
+    print(cgEvent.flags, String(describing: key), isKeyDown ? "down" : "up")
     
     let action = handleEmacsMode(key: key, flags: flags, isKeyDown: isKeyDown)
       ?? .passThrough
