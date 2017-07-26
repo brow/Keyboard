@@ -48,26 +48,28 @@ final class EventManager {
       return true
     }
     
-    if flags.contains(.maskSecondaryFn) {
-      if let arrowKey: KeyCode = ({
-        switch key {
-        case .h:
-          return .leftArrow
-        case .j:
-          return .downArrow
-        case .k:
-          return .upArrow
-        case .l:
-          return .rightArrow
-        default:
-          return nil
+    for modifier: CGEventFlags in [.maskSecondaryFn, .maskRightCommand] {
+      if flags.contains(modifier) {
+        if let arrowKey: KeyCode = ({
+          switch key {
+          case .h:
+            return .leftArrow
+          case .j:
+            return .downArrow
+          case .k:
+            return .upArrow
+          case .l:
+            return .rightArrow
+          default:
+            return nil
+          }
+          }()) {
+          press(
+            key: arrowKey,
+            flags: flags.subtracting(modifier),
+            isKeyDown: isKeyDown)
+          return true
         }
-      }()) {
-        press(
-          key: arrowKey,
-          flags: flags.subtracting(.maskSecondaryFn),
-          isKeyDown: isKeyDown)
-        return true
       }
     }
     
