@@ -15,7 +15,6 @@ final class EventManager {
   enum KeyPressAction {
     case down
     case up
-    case both
     
     func keyDowns() -> [Bool] {
       switch self {
@@ -23,8 +22,6 @@ final class EventManager {
         return [true]
       case .up:
         return [false]
-      case .both:
-        return [true, false]
       }
     }
   }
@@ -117,12 +114,14 @@ final class EventManager {
       }
     }
     
-    if let remap = remap {
+    if let (remapKeyCode, remapFlags) = remap {
       let remapFlags = flags.contains(.shift)
-        ? remap.1.union(.maskShift)
-        : remap.1
-      
-      press(key: remap.0, flags: remapFlags, action: (isKeyDown ? .down : .up))
+        ? remapFlags.union(.maskShift)
+        : remapFlags
+      press(
+        key: remapKeyCode,
+        flags: remapFlags,
+        action: (isKeyDown ? .down : .up))
       return .prevent
     }
     
@@ -132,12 +131,9 @@ final class EventManager {
   private func press(
     key: KeyCode,
     flags: CGEventFlags = [],
-    action: KeyPressAction = .both)
+    action: KeyPressAction)
   {
     action.keyDowns().forEach { keyDown in
-      if !keyDown && action == .both {
-        usleep(1000)
-      }
       if let e = CGEvent(
           keyboardEventSource: nil,
           virtualKey: key.rawValue,
