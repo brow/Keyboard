@@ -14,7 +14,7 @@ func handle(event: CGEvent) -> Unmanaged<CGEvent>? {
   let flags = event.flags
   let isKeyDown = (event.type == .keyDown)
   
-  print(flags, String(describing: key), isKeyDown ? "down" : "up")
+//  print(flags, String(describing: key), isKeyDown ? "down" : "up")
   
   let didRemap = handleKeyEvent(
     key: key,
