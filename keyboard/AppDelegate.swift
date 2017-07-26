@@ -3,36 +3,39 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   
-  private lazy var statusItem: NSStatusItem = {
-    return NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
-  }()
+  // MARK: NSApplicationDelegate
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    setupStatusItem()
+    setUpStatusItem()
     trustThisApplication()
     trapKeyEvents()
   }
   
-  func applicationWillTerminate(_ aNotification: Notification) {
-  }
+  // MARK: private
   
-  private func setupStatusItem() {
+  private let statusItem = NSStatusBar.system().statusItem(
+    withLength: NSSquareStatusItemLength)
+  
+  private func setUpStatusItem() {
     if let button = statusItem.button {
       button.title = "K"
-      button.action = #selector(onOpen)
+      button.action = #selector(open)
     }
     
     statusItem.menu = {
       let menu = NSMenu()
-      
-      menu.addItem(NSMenuItem(title: "Quit", action: #selector(onQuit), keyEquivalent: "q"))
-      
+      menu.addItem(
+        NSMenuItem(
+          title: "Quit",
+          action: #selector(quit),
+          keyEquivalent: "q"))
       return menu
     }()
   }
   
   private func trapKeyEvents() {
-    let eventMask = (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
+    let eventMask =
+      (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
     
     guard
       let eventTap = CGEvent.tapCreate(
@@ -44,7 +47,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         userInfo: nil)
       else { fatalError("Failed to create event tap") }
     
-    let runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, 0)
+    let runLoopSource = CFMachPortCreateRunLoopSource(
+      kCFAllocatorDefault, eventTap, 0)
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
     CGEvent.tapEnable(tap: eventTap, enable: true)
     CFRunLoopRun()
@@ -57,14 +61,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       ) as CFDictionary
     
     guard AXIsProcessTrustedWithOptions(opts) else {
-      exit(1)
+      fatalError("Process is not trusted")
     }
   }
   
-  func onQuit() {
+  @objc private func quit() {
     NSApplication.shared().terminate(nil)
   }
   
-  func onOpen() {
-  }
+  @objc private func open() {}
 }
