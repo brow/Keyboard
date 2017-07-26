@@ -120,13 +120,13 @@ final class EventManager {
     flags: CGEventFlags = [],
     isKeyDown: Bool)
   {
-    if let e = CGEvent(
+    if let event = CGEvent(
       keyboardEventSource: nil,
       virtualKey: key.rawValue,
       keyDown: isKeyDown)
     {
-      e.flags = flags.union(noremapFlag)
-      e.post(tap: .cghidEventTap)
+      event.flags = flags.union(noremapFlag)
+      event.post(tap: .cghidEventTap)
     }
   }
 }
