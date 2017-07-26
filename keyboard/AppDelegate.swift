@@ -6,17 +6,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   // MARK: NSApplicationDelegate
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    setUpStatusItem()
     trustThisApplication()
     trapKeyEvents()
   }
   
   // MARK: private
   
-  private let statusItem = NSStatusBar.system().statusItem(
-    withLength: NSSquareStatusItemLength)
-  
-  private func setUpStatusItem() {
+  private let statusItem: NSStatusItem = {
+    let statusItem = NSStatusBar.system().statusItem(
+      withLength: NSSquareStatusItemLength)
+    
     if let button = statusItem.button {
       button.title = "K"
       button.action = #selector(open)
@@ -31,8 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
           keyEquivalent: "q"))
       return menu
     }()
-  }
-  
+    
+    return statusItem
+  }()
+
   private func trapKeyEvents() {
     let eventMask =
       (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
