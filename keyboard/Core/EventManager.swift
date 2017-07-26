@@ -1,33 +1,31 @@
 import Cocoa
 
-func handle(event: CGEvent) -> Unmanaged<CGEvent>? {
+func handle(event: CGEvent) -> Bool {
   if event.flags.contains(noremapFlag) {
     event.flags.remove(noremapFlag)
-    return Unmanaged.passRetained(event)
+    return false
   }
   
   guard
     let keyCode = NSEvent(cgEvent: event)?.keyCode,
-    let key = KeyCode(rawValue: keyCode)
-    else { return Unmanaged.passRetained(event) }
+    let key = Key(rawValue: keyCode)
+    else { return false }
   
   let flags = event.flags
   let isKeyDown = (event.type == .keyDown)
   
 //  print(flags, String(describing: key), isKeyDown ? "down" : "up")
   
-  let didRemap = handleKeyEvent(
+  return handleKeyEvent(
     key: key,
     flags: flags,
     isKeyDown: isKeyDown)
-  
-  return didRemap ? nil : Unmanaged.passRetained(event)
 }
 
 private let noremapFlag: CGEventFlags = .maskAlphaShift
 
 private func handleKeyEvent(
-  key: KeyCode,
+  key: Key,
   flags: CGEventFlags,
   isKeyDown: Bool)
   -> Bool
@@ -42,7 +40,7 @@ private func handleKeyEvent(
   
   for modifier: CGEventFlags in [.maskSecondaryFn, .maskRightCommand] {
     if flags.contains(modifier) {
-      if let arrowKey: KeyCode = ({
+      if let arrowKey: Key = ({
         switch key {
         case .h:
           return .leftArrow
@@ -69,7 +67,7 @@ private func handleKeyEvent(
 }
 
 private func press(
-  key: KeyCode,
+  key: Key,
   flags: CGEventFlags = [],
   isKeyDown: Bool)
 {

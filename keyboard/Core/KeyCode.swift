@@ -1,6 +1,6 @@
 import Cocoa
 
-enum KeyCode: UInt16 {
+enum Key: UInt16 {
   case a              = 0x00
   case s              = 0x01
   case d              = 0x02
