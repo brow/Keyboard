@@ -7,7 +7,7 @@ final class EventManager {
   
   private let noremapFlag: CGEventFlags = .maskAlphaShift
   
-  enum Action {
+  private enum Action {
     case prevent
     case passThrough
   }
