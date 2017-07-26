@@ -7,11 +7,6 @@ final class EventManager {
   
   private let noremapFlag: CGEventFlags = .maskAlphaShift
   
-  private enum Action {
-    case prevent
-    case passThrough
-  }
-  
   private init() {
   }
   
@@ -31,25 +26,19 @@ final class EventManager {
     
     print(flags, String(describing: key), isKeyDown ? "down" : "up")
     
-    let action = handleKeyEvent(
+    let didRemap = handleKeyEvent(
       key: key,
       flags: flags,
       isKeyDown: isKeyDown)
-      ?? .passThrough
     
-    switch action {
-    case .prevent:
-      return nil
-    case .passThrough:
-      return Unmanaged.passRetained(event)
-    }
+    return didRemap ? nil : Unmanaged.passRetained(event)
   }
   
   private func handleKeyEvent(
     key: KeyCode,
     flags: CGEventFlags,
     isKeyDown: Bool)
-    -> Action?
+    -> Bool
   {
     var remap: (KeyCode, CGEventFlags)? = nil
     
@@ -69,11 +58,11 @@ final class EventManager {
       press(
         key: remapKeyCode,
         flags: remapFlags,
-        isKeyDown: isKeyDown )
-      return .prevent
+        isKeyDown: isKeyDown)
+      return true
     }
     
-    return nil
+    return false
   }
   
   private func press(
