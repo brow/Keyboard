@@ -43,59 +43,18 @@ final class EventManager {
     }
   }
   
-  // Emacs mode:
-  //
-  //     Ctrl-C    Escape
-  //     Ctrl-D    Forward delete
-  //     Ctrl-H    Backspace
-  //     Ctrl-J    Enter
-  //     Ctrl-P    ↑
-  //     Ctrl-N    ↓
-  //     Ctrl-B    ←
-  //     Ctrl-F    →
-  //     Ctrl-A    Beginning of line (Shift allowed)
-  //     Ctrl-E    End of line (Shift allowed)
-  //
   private func handleEmacsMode(
     key: KeyCode,
     flags: NSEventModifierFlags,
     isKeyDown: Bool)
     -> Action?
   {
-    if key == .c && flags.match(control: true) {
-      press(key: .escape, isKeyDown: isKeyDown)
-      return .prevent
-    }
-    
     var remap: (KeyCode, CGEventFlags)? = nil
     
     if flags.match(control: true) {
       switch key {
-      case .d:
-        remap = (.forwardDelete, [])
-      case .h:
-        remap = (.backspace, [])
-      case .j:
-        remap = (.enter, [])
-      default:
-        break
-      }
-    }
-    
-    if flags.match(shift: nil, control: true) {
-      switch key {
-      case .p:
-        remap = (.upArrow, [])
-      case .n:
-        remap = (.downArrow, [])
-      case .b:
-        remap = (.leftArrow, [])
-      case .f:
-        remap = (.rightArrow, [])
-      case .a:
-        remap = (.leftArrow, [.maskCommand])
-      case .e:
-        remap = (.rightArrow, [.maskCommand])
+      case .leftBracket:
+        remap = (.escape, [])
       default:
         break
       }
