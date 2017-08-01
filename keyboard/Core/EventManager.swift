@@ -5,13 +5,13 @@ func handle(event: CGEvent) -> Bool {
     event.flags.remove(noremapFlag)
     return false
   }
-  
-  if virtualCtrl {
-    event.flags.insert(.maskControl)
-  }
 
   switch event.type {
   case .keyUp, .keyDown:
+    if virtualCtrlDown != nil {
+      event.flags.insert(.maskControl)
+    }
+    
     guard
       let keyCode = NSEvent(cgEvent: event)?.keyCode,
       let key = Key(rawValue: keyCode)
@@ -23,8 +23,17 @@ func handle(event: CGEvent) -> Bool {
       flags: flags,
       isKeyDown: isKeyDown)
   case .flagsChanged:
-    if event.flags.contains(.maskToggleCapsLock) {
-      virtualCtrl = !virtualCtrl
+    if event.flags.contains(.maskControl) {
+      if virtualCtrlDown == nil {
+        virtualCtrlDown = event.timestamp
+      }
+    } else {
+      if let ctrlDown = virtualCtrlDown {
+        let elapsed: CGEventTimestamp = event.timestamp - ctrlDown
+        if elapsed > 10000000 {
+          virtualCtrlDown = nil
+        }
+      }
     }
     return false
   default:
@@ -33,7 +42,7 @@ func handle(event: CGEvent) -> Bool {
 }
 
 private let noremapFlag = CGEventFlags.maskAlphaShift
-private var virtualCtrl = false
+private var virtualCtrlDown: UInt64? = nil
 
 private func handleKeyEvent(
   key: Key,
