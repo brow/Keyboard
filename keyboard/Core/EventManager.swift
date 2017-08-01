@@ -23,7 +23,7 @@ func handle(event: CGEvent) -> Bool {
       flags: flags,
       isKeyDown: isKeyDown)
   case .flagsChanged:
-    if event.flags.contains(maskToggleCapsLock) {
+    if event.flags.contains(.maskToggleCapsLock) {
       virtualCtrl = !virtualCtrl
     }
     return false
@@ -33,7 +33,6 @@ func handle(event: CGEvent) -> Bool {
 }
 
 private let noremapFlag = CGEventFlags.maskAlphaShift
-private let maskToggleCapsLock = CGEventFlags(rawValue: 262401)
 private var virtualCtrl = false
 
 private func handleKeyEvent(
