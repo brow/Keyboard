@@ -6,23 +6,35 @@ func handle(event: CGEvent) -> Bool {
     return false
   }
   
-  guard
-    let keyCode = NSEvent(cgEvent: event)?.keyCode,
-    let key = Key(rawValue: keyCode)
-    else { return false }
-  
-  let flags = event.flags
-  let isKeyDown = (event.type == .keyDown)
-  
-//  print(flags, String(describing: key), isKeyDown ? "down" : "up")
-  
-  return handleKeyEvent(
-    key: key,
-    flags: flags,
-    isKeyDown: isKeyDown)
+  if virtualCtrl {
+    event.flags.insert(.maskControl)
+  }
+
+  switch event.type {
+  case .keyUp, .keyDown:
+    guard
+      let keyCode = NSEvent(cgEvent: event)?.keyCode,
+      let key = Key(rawValue: keyCode)
+      else { return false }
+    let flags = event.flags
+    let isKeyDown = (event.type == .keyDown)
+    return handleKeyEvent(
+      key: key,
+      flags: flags,
+      isKeyDown: isKeyDown)
+  case .flagsChanged:
+    if event.flags.contains(maskToggleCapsLock) {
+      virtualCtrl = !virtualCtrl
+    }
+    return false
+  default:
+    return false
+  }
 }
 
-private let noremapFlag: CGEventFlags = .maskAlphaShift
+private let noremapFlag = CGEventFlags.maskAlphaShift
+private let maskToggleCapsLock = CGEventFlags(rawValue: 262401)
+private var virtualCtrl = false
 
 private func handleKeyEvent(
   key: Key,

@@ -30,7 +30,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   private func trapKeyEvents() {
     let eventMask =
-      (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
+      (1 << CGEventType.keyDown.rawValue) |
+      (1 << CGEventType.keyUp.rawValue) |
+      (1 << CGEventType.flagsChanged.rawValue)
     
     guard
       let eventTap = CGEvent.tapCreate(
@@ -39,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         options: .defaultTap,
         eventsOfInterest: CGEventMask(eventMask),
         callback: { (_, _, event, _) in
-          handle(event: event) ? nil : Unmanaged.passUnretained(event)
+          return handle(event: event) ? nil : Unmanaged.passUnretained(event)
         },
         userInfo: nil)
       else { fatalError("Failed to create event tap") }
