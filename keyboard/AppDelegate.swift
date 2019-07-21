@@ -13,8 +13,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   // MARK: private
   
   private let statusItem: NSStatusItem = {
-    let statusItem = NSStatusBar.system().statusItem(
-      withLength: NSSquareStatusItemLength)
+    let statusItem = NSStatusBar.system.statusItem(
+      withLength: NSStatusItem.squareLength)
     statusItem.button?.title = "⌨️"
     statusItem.menu = {
       let menu = NSMenu()
@@ -65,6 +65,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
   
   @objc private func quit() {
-    NSApplication.shared().terminate(nil)
+    NSApplication.shared.terminate(nil)
   }
 }
