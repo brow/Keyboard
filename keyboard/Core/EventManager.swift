@@ -68,7 +68,11 @@ private func handleKeyEvent(
     return true
   }
   
-  for modifier: CGEventFlags in [.maskSecondaryFn, .maskRightCommand] {
+  for modifier: CGEventFlags in [
+    .maskSecondaryFn,
+    .maskRightCommand,
+    .maskLeftControl]
+  {
     if flags.contains(modifier) {
       if let arrowKey: Key = ({
         switch key {
