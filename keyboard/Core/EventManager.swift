@@ -8,10 +8,6 @@ func handle(event: CGEvent) -> Bool {
 
   switch event.type {
   case .keyUp, .keyDown:
-    if virtualCtrlDown != nil {
-      event.flags.insert(.maskControl)
-    }
-    
     guard
       let keyCode = NSEvent(cgEvent: event)?.keyCode,
       let key = Key(rawValue: keyCode)
@@ -22,27 +18,12 @@ func handle(event: CGEvent) -> Bool {
       key: key,
       flags: flags,
       isKeyDown: isKeyDown)
-  case .flagsChanged:
-    if event.flags.contains(.maskControl) {
-      if virtualCtrlDown == nil {
-        virtualCtrlDown = event.timestamp
-      }
-    } else {
-      if let ctrlDown = virtualCtrlDown {
-        let elapsed: CGEventTimestamp = event.timestamp - ctrlDown
-        if elapsed > 10000000 {
-          virtualCtrlDown = nil
-        }
-      }
-    }
-    return false
   default:
     return false
   }
 }
 
 private let noremapFlag = CGEventFlags.maskAlphaShift
-private var virtualCtrlDown: UInt64? = nil
 
 private func handleKeyEvent(
   key: Key,
