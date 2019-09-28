@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AE6A00D61ED6A25000A93C2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A00D51ED6A25000A93C2E /* AppDelegate.swift */; };
-		AE6A00D81ED6A25000A93C2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE6A00D71ED6A25000A93C2E /* Assets.xcassets */; };
 		AE6A00DB1ED6A25000A93C2E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE6A00D91ED6A25000A93C2E /* MainMenu.xib */; };
 		AE6A00E41ED88F3F00A93C2E /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A00E31ED88F3F00A93C2E /* EventManager.swift */; };
 		AE6A00E61ED8962500A93C2E /* KeyCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A00E51ED8962500A93C2E /* KeyCode.swift */; };
@@ -18,7 +17,6 @@
 /* Begin PBXFileReference section */
 		AE6A00D21ED6A25000A93C2E /* keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = keyboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE6A00D51ED6A25000A93C2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AE6A00D71ED6A25000A93C2E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE6A00DA1ED6A25000A93C2E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		AE6A00DC1ED6A25000A93C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE6A00E31ED88F3F00A93C2E /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManager.swift; path = Core/EventManager.swift; sourceTree = "<group>"; };
@@ -58,7 +56,6 @@
 			children = (
 				AE6A00E21ED88F0200A93C2E /* Core */,
 				AE6A00D51ED6A25000A93C2E /* AppDelegate.swift */,
-				AE6A00D71ED6A25000A93C2E /* Assets.xcassets */,
 				AE6A00D91ED6A25000A93C2E /* MainMenu.xib */,
 				AE6A00DC1ED6A25000A93C2E /* Info.plist */,
 			);
@@ -135,7 +132,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE6A00D81ED6A25000A93C2E /* Assets.xcassets in Resources */,
 				AE6A00DB1ED6A25000A93C2E /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
