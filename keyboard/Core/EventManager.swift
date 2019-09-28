@@ -8,10 +8,6 @@ func handle(event: CGEvent) -> Bool {
 
   switch event.type {
   case .keyUp, .keyDown:
-    if virtualFn {
-      event.flags.insert(.maskSecondaryFn)
-    }
-    
     if virtualCtrlDown != nil {
       event.flags.insert(.maskControl)
     }
@@ -47,7 +43,6 @@ func handle(event: CGEvent) -> Bool {
 
 private let noremapFlag = CGEventFlags.maskAlphaShift
 private var virtualCtrlDown: UInt64? = nil
-private var virtualFn = false
 
 private func handleKeyEvent(
   key: Key,
@@ -55,11 +50,6 @@ private func handleKeyEvent(
   isKeyDown: Bool)
   -> Bool
 {
-  if key == .escape {
-    virtualFn = isKeyDown
-    return true
-  }
-  
   if flags.contains(.maskControl), key == .leftBracket {
     press(
       key: .escape,
